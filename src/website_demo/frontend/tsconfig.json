@@ -19,7 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["../../../ADEP-DQ/scr/website_demo/fontend/src/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

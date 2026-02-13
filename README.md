@@ -1,5 +1,6 @@
 ## Overview
 ## Repository Structure
+
 ```
 |-- src/
 |   |-- data/                        # Main datasets used in the paper (e.g., MOOCCubeX)
@@ -13,6 +14,7 @@
 |-- submission/
 |   |-- note.md                      # Notes on submission and review process
 |-- README.md                        # Project documentation and setup guide
+```
 
 ## Contents
 ## System

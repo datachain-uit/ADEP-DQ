@@ -44,9 +44,9 @@ The data processing pipeline and baseline demonstration are available at the [li
 - **README.md**: Comprehensive project documentation, environment setup guide, and usage instructions for the MoocCubeX baseline.
 ## Workflow
 The following diagram illustrates the workflow of baseline:
+![Framework](/src/Workflow.png)
 
 The workflow includes:
-![Framework](/src/Workflow.png)
 1. **Data Collection**: Gathering data from the MOOCCubeX dataset, including learner profiles, course details, and interaction data
 2. **Data Preprocessing and Imputation**: Performing preprocessing steps with a focus on HetGNN-based imputation to handle missing values and ensure data quality for modeling
 3. **Model Training**: Implementing the HetGNN-KGAT model to generate personalized course recommendations, trained on the preprocessed data

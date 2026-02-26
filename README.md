@@ -53,7 +53,8 @@ ADEP-DQ 2.0 follows an end-to-end workflow:
 - (4) **Automated DQ Measurement** computes conventional DQ dimensions; 
 - (5) **Adaptive DQ Intervention** applies targeted corrections and enhancements; 
 - (6) **Temporal DL Modeling** trains early-prediction models; 
-- (7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance; and (8) \emph{Continuous DQ Monitoring and Early Intervention} establishes ongoing governance to detect degradation and trigger timely interventions during operation.
+- (7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance;
+- (8) **Continuous DQ Monitoring and Early Intervention** establishes ongoing governance to detect degradation and trigger timely interventions during operation.
 
 ## Getting Started
 

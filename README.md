@@ -44,14 +44,21 @@ The data processing pipeline and baseline demonstration are available at the [li
 - **README.md**: Comprehensive project documentation, environment setup guide, and usage instructions for the MoocCubeX baseline.
 ## Workflow
 The following diagram illustrates the workflow of baseline:
-![Framework](/src/Workflow.png)
+![ADEP-DQ-V2-Framework](https://github.com/user-attachments/assets/3c3d2e5e-6a76-442f-9c9c-f5b67c9066a0)
 
-The workflow includes:
-1. **Data Collection**: Gathering data from the MOOCCubeX dataset, including learner profiles, course details, and interaction data
-2. **Data Preprocessing and Imputation**: Performing preprocessing steps with a focus on HetGNN-based imputation to handle missing values and ensure data quality for modeling
-3. **Model Training**: Implementing the HetGNN-KGAT model to generate personalized course recommendations, trained on the preprocessed data
-4. **Evaluation and Visualization**: Assessing data quality and model performance using metrics like direct evaluation (Completeness, Consistency), indirect evaluation include (Precision@K, Recall@K, F1 Score ..)
+ADEP-DQ 2.0 follows an end-to-end workflow: 
+(1) **Problem Scoping** defines prediction targets, constraints, and evaluation criteria; 
+(2) **Multi-Source Ingestion** consolidates heterogeneous MOOC data streams; 
+(3) **Early-Aware Data Preparation** structures temporal-ready inputs for DL; 
+(4) **Automated DQ Measurement** computes conventional DQ dimensions; 
+(5) **Adaptive DQ Intervention** applies targeted corrections and enhancements; 
+(6) **Temporal DL Modeling** trains early-prediction models; 
+(7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance; and (8) \emph{Continuous DQ Monitoring and Early Intervention} establishes ongoing governance to detect degradation and trigger timely interventions during operation.
 
 ## Getting Started
+
 ## Usage
+
 ## Contributors
+**Leader**: M.Sc. IT. Thu Nguyen
+**Members**: Man Nguyen, Ngoc Nguyen, Luan Nguyen, Anh Tran, Huong Lai

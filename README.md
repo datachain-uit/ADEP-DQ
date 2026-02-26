@@ -47,19 +47,18 @@ The following diagram illustrates the workflow of baseline:
 ![ADEP-DQ-V2-Framework](https://github.com/user-attachments/assets/3c3d2e5e-6a76-442f-9c9c-f5b67c9066a0)
 
 ADEP-DQ 2.0 follows an end-to-end workflow: 
-(1) **Problem Scoping** defines prediction targets, constraints, and evaluation criteria; 
-(2) **Multi-Source Ingestion** consolidates heterogeneous MOOC data streams; 
-(3) **Early-Aware Data Preparation** structures temporal-ready inputs for DL; 
-(4) **Automated DQ Measurement** computes conventional DQ dimensions; 
-(5) **Adaptive DQ Intervention** applies targeted corrections and enhancements; 
-(6) **Temporal DL Modeling** trains early-prediction models; 
-(7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance; and (8) \emph{Continuous DQ Monitoring and Early Intervention} establishes ongoing governance to detect degradation and trigger timely interventions during operation.
+- (1) **Problem Scoping** defines prediction targets, constraints, and evaluation criteria; 
+- (2) **Multi-Source Ingestion** consolidates heterogeneous MOOC data streams; 
+- (3) **Early-Aware Data Preparation** structures temporal-ready inputs for DL; 
+- (4) **Automated DQ Measurement** computes conventional DQ dimensions; 
+- (5) **Adaptive DQ Intervention** applies targeted corrections and enhancements; 
+- (6) **Temporal DL Modeling** trains early-prediction models; 
+- (7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance; and (8) \emph{Continuous DQ Monitoring and Early Intervention} establishes ongoing governance to detect degradation and trigger timely interventions during operation.
 
 ## Getting Started
 
 ## Usage
 
 ## Contributors
-**Leader**: M.Sc. IT. Thu Nguyen
-
-**Members**: Man Nguyen, Ngoc Nguyen, Luan Nguyen, Anh Tran, Huong Lai
+- **Leader**: M.Sc. IT. Thu Nguyen
+- **Members**: Man Nguyen, Ngoc Nguyen, Luan Nguyen, Anh Tran, Huong Lai

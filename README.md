@@ -61,4 +61,5 @@ ADEP-DQ 2.0 follows an end-to-end workflow:
 
 ## Contributors
 **Leader**: M.Sc. IT. Thu Nguyen
+
 **Members**: Man Nguyen, Ngoc Nguyen, Luan Nguyen, Anh Tran, Huong Lai

@@ -1,6 +1,8 @@
 ## Overview
-This repository contains resources related to the development of a comprehensive baseline for data processing on MoocCubeX.
-The data processing pipeline and baseline demonstration are available at the [link]
+This repository provides resources for developing a comprehensive baseline for data processing on the MoocCubeX dataset.
+
+The original MoocCubeX dataset can be accessed at:  
+https://github.com/THU-KEG/MOOCCubeX
 ## Repository Structure
 
 ```

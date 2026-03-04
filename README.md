@@ -10,8 +10,7 @@ The data processing pipeline and baseline demonstration are available at the [li
 |           |-- baseline_model/      # Implementation and checkpoints of baseline models
 |           |-- dataset/
 |           |-- process/            /# Processed data splits specific to these experiments
-|       |-- CQ/                      # Experimental scripts and notebooks (Course Quality)
-|           |-- baseline_model/      
+|       |-- CQ/                      # Experimental scripts and notebooks (Course Quality)   
 |           |-- dataset/             
 |           |-- process/
             # Data preprocessing scripts and intermediate logs

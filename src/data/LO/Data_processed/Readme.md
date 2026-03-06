@@ -5,4 +5,4 @@ This repository contains the processed dataset used for training machine learnin
 ## Dataset Link
 You can download the full dataset from Kaggle:
 
-https://www.kaggle.com/datasets/anhtran10/split-dataset
+https://www.kaggle.com/datasets/anhtran10/lo-dataset

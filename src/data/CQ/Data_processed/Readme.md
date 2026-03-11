@@ -5,4 +5,5 @@ This repository contains the processed dataset used for augmentation and trainin
 ## Dataset Link
 You can download the full dataset from Kaggle:
 
-[Dataset](https://www.kaggle.com/datasets/nguyenducminhman/data-demo)
+[Dataset_raw_with_label](https://www.kaggle.com/datasets/nguyenducminhman/data-demo)
+[Dataset_after_augmentation](https://www.kaggle.com/datasets/cartoonfunny/moocs-dataset-process)

@@ -45,17 +45,11 @@ https://github.com/THU-KEG/MOOCCubeX
 - **README.md**: Comprehensive project documentation, environment setup guide, and usage instructions for the MoocCubeX baseline.
 ## Workflow
 The following diagram illustrates the workflow of baseline:
-![ADEP-DQ-V2-Framework](https://github.com/user-attachments/assets/3c3d2e5e-6a76-442f-9c9c-f5b67c9066a0)
+![TEMPO-DQ](https://github.com/user-attachments/assets/b90c028c-cbf6-48d9-88f8-1364ec9dd0b4)
 
-ADEP-DQ 2.0 follows an end-to-end workflow: 
-- (1) **Problem Scoping** defines prediction targets, constraints, and evaluation criteria; 
-- (2) **Multi-Source Ingestion** consolidates heterogeneous MOOC data streams; 
-- (3) **Early-Aware Data Preparation** structures temporal-ready inputs for DL; 
-- (4) **Automated DQ Measurement** computes conventional DQ dimensions; 
-- (5) **Adaptive DQ Intervention** applies targeted corrections and enhancements; 
-- (6) **Temporal DL Modeling** trains early-prediction models; 
-- (7) **Automated DQ Measurement** extends to advanced DQ dimensions linked to model performance;
-- (8) **Continuous DQ Monitoring and Early Intervention** establishes ongoing governance to detect degradation and trigger timely interventions during operation.
+The TEMPO-DQ pipeline is designed as a standardized end-to-end operational guide for preparing and governing heterogeneous big data within a unified data-preparation logic for DL-based early prediction. Rather than treating structured, semi-structured, and unstructured data as separate preprocessing streams, the framework integrates them into a coherent workflow that supports **Early Multi-Class Prediction under Heterogeneous Big Data**. As illustrated in this figure, this pipeline begins with **(1) Problem Scoping** to define prediction objectives, operational constraints, and evaluation criteria, then proceeds through **(2) Multi-Source Ingestion** and **(3) Early-Aware Data Preparation** to transform heterogeneous raw inputs into temporally consistent, model-ready representations. This design ensures that data preparation is not reduced to isolated technical steps, but is operationalized as a reproducible and deployable process aligned with the requirements of early inference.
+
+Within this standardized workflow, TEMPO-DQ further embeds **(4) Automated DQ Measurement**, **(5) Adaptive DQ Intervention**, **(6) Temporal DL Modeling**, and continuous monitoring into the same end-to-end logic. Conventional DQ dimensions are first assessed to identify baseline issues in heterogeneous data assets, after which targeted interventions are applied to correct, enrich, and stabilize the prepared inputs. The workflow then extends DQ measurement toward advanced, performance-linked dimensions that reflect real model behavior during early multi-class prediction. By coupling heterogeneous data preparation with adaptive DQ governance and temporal modeling, TEMPO-DQ functions as a general DQF that bridges large-scale data processing and deployment-oriented AI operation. In this way, the pipeline provides a practical and standardized mechanism for operationalizing heterogeneous data, diagnosing quality-related risks, and sustaining reliable early prediction performance over time.
 
 ## Getting Started
 

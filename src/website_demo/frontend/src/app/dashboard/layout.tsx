@@ -47,8 +47,7 @@ export default function DashboardLayout({
           </Avatar>
         </header>
 
-        <div
-          className="relative z-10 p-16 pb-4 pt-0 overflow-y-auto flex-1 
+        <div className="relative z-10 p-16 pb-4 pt-0 overflow-y-auto flex-1 
             [&::-webkit-scrollbar]:w-2
             [&::-webkit-scrollbar-track]:bg-transparent
             [&::-webkit-scrollbar-thumb]:bg-zinc-800

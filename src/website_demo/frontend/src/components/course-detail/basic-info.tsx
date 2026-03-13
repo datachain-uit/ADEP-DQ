@@ -19,7 +19,7 @@ import { InfoShape } from "./info-shape";
 // --- DỮ LIỆU MOCK UP ---
 
 const courseInfo = {
-  name: "toi xin loi hoc cai nay met qua",
+  name: "Machine Learning",
   description:
     "About this course: ¡Buscamos promover llevemos el desarrollo física de nuestros atletas. ¡Unite y juntos llevemos el a otro nivel!...",
   startDate: "16/09/2025",

@@ -15,7 +15,6 @@ const menuItems = [
   { name: "Data Quality", icon: Database, href: "/dashboard/data-quality" },
   { name: "Courses", icon: BookOpen, href: "/dashboard/courses" },
   { name: "User", icon: BookOpen, href: "/dashboard/users" },
-  { name: "Experiment", icon: BookOpen, href: "/dashboard/experiment" },
 ];
 
 const bottomItems = [

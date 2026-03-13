@@ -12,6 +12,9 @@ const CustomLegend: React.FC<LegendProps> = ({ payload }) => {
           payload: { percent: number };
         };
 
+        // Tính toán phần trăm và làm tròn 2 chữ số thập phân
+        const displayPercent = (legendItem.payload.percent * 100).toFixed(2);
+
         return (
           <div
             key={legendItem.value}
@@ -26,9 +29,9 @@ const CustomLegend: React.FC<LegendProps> = ({ payload }) => {
               <span className="text-zinc-300">{legendItem.value}</span>
             </div>
 
-            {/* Right: percentage */}
+            {/* Right: percentage - ĐÃ ĐƯỢC LÀM TRÒN */}
             <span className="text-zinc-100 font-medium">
-              {legendItem.payload.percent * 100}%
+              {displayPercent}%
             </span>
           </div>
         );

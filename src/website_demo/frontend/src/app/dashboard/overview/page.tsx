@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { StatCard } from "@/components/ui/stat-card";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -10,110 +10,179 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import CustomLegend from "@/components/custom-legend";
-import {
-  Activity,
-  ChevronRight,
-  Database,
-  GraduationCap,
-  Users,
-} from "lucide-react";
-import { Tab } from "@/components/ui/tab";
-import { Shape } from "@/components/ui/shape";
-import Link from "next/link";
-import { CustomLineChart } from "@/components/line-chart";
-import { RateBarChart } from "@/components/rate-bar-chart";
 import { CustomPieChart } from "@/components/pie-chart";
+import {
+  BookOpen,
+  Users,
+  Activity,
+  UserCheck,
+  PlayCircle,
+  Clock,
+  AlertCircle,
+} from "lucide-react";
 
-// --- DỮ LIỆU GIẢ LẬP (MOCK DATA) ---
+// --- 1. HÀM TIỆN ÍCH: GÁN MÀU CHO BIỂU ĐỒ TRÒN ---
+// Xử lý cả trường hợp tên đầy đủ (Excellent) và viết tắt (E, G, M, L, F)
+const assignColor = (label: string) => {
+  if (!label) return "#9CA3AF"; // Màu xám nếu null
 
-const lineData = [
-  [
-    { name: "Jun 2020", score: 66668 },
-    { name: "Jul 2020", score: 61372 },
-    { name: "Aug 2020", score: 94924 },
-    { name: "Sep 2020", score: 243650 },
-    { name: "Oct 2020", score: 31650 },
-    { name: "Nov 2020", score: 22438 },
-    { name: "Dec 2020", score: 794 },
-  ],
-];
+  const l = String(label).toLowerCase().trim();
 
-const labelData = [
-  { name: "Excellent", value: 0.1, color: "#67AA50" },
-  { name: "Good", value: 0.26, color: "#EFC690" },
-  { name: "Failed", value: 99.64, color: "#F5B562" },
-];
+  // Nhóm Tốt (Xanh lá): Excellent, High, E, H
+  // Dùng mảng regex hoặc check string để cover hết các trường hợp
+  if (["excellent", "high", "e", "h"].some(k => l === k || l.includes(k))) 
+    return "#67AA50"; 
 
-const barChartData = [
-  { name: "06/2020", rate: 30 },
-  { name: "07/2020", rate: 96 },
-  { name: "08/2020", rate: 20 },
-  { name: "09/2020", rate: 80 },
-  { name: "10/2020", rate: 55 },
-  { name: "11/2020", rate: 90 },
-  { name: "12/2020", rate: 70 },
-];
+  // Nhóm Trung bình (Vàng): Good, Average, Medium, G, A, M
+  if (["good", "average", "medium", "g", "a", "m"].some(k => l === k || l.includes(k))) 
+    return "#EFC690"; 
 
-const courseData = [
-  { courseId: "C_936971", totalRegistration: 209703, passRate: 12 },
-  { courseId: "C_697791", totalRegistration: 92350, passRate: 18 },
-  { courseId: "C_801420", totalRegistration: 33911, passRate: 25 },
-  { courseId: "C_696942", totalRegistration: 31335, passRate: 22 },
-  { courseId: "C_696597", totalRegistration: 27996, passRate: 15 },
-  { courseId: "C_707373", totalRegistration: 27470, passRate: 30 },
-  { courseId: "C_696724", totalRegistration: 26440, passRate: 19 },
-  { courseId: "C_947252", totalRegistration: 21917, passRate: 17 },
-  { courseId: "C_707456", totalRegistration: 21140, passRate: 23 },
-  { courseId: "C_1822804", totalRegistration: 20058, passRate: 14 },
-];
+  // Nhóm Thấp/Cảnh báo (Đỏ): Failed, Risk, Low, F, L, R
+  if (["failed", "risk", "low", "l", "f", "r"].some(k => l === k || l.includes(k))) 
+    return "#EF5050"; 
+  
+  return "#9CA3AF"; // Mặc định
+};
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
+// --- 2. COMPONENT HIỂN THỊ NHÃN (BADGE) ---
+const StatusBadge = ({ label }: { label: string }) => {
+  const safeLabel = label || "N/A";
+  const l = String(safeLabel).toLowerCase().trim();
+  
+  let colorClass = "text-gray-400 bg-gray-400/10"; // Mặc định xám
+
+  // Logic màu tương tự như biểu đồ
+  if (["excellent", "high", "e", "h"].some(k => l === k || l.includes(k))) 
+      colorClass = "text-green-400 bg-green-400/10";
+      
+  else if (["good", "average", "medium", "g", "a", "m"].some(k => l === k || l.includes(k))) 
+      colorClass = "text-yellow-400 bg-yellow-400/10";
+      
+  else if (["failed", "risk", "low", "l", "f", "r"].some(k => l === k || l.includes(k))) 
+      colorClass = "text-red-400 bg-red-400/10";
+
+  return (
+    <span className={`px-2 py-1 rounded text-xs font-medium ${colorClass} border border-white/5`}>
+      {safeLabel}
+    </span>
+  );
+};
+
+// --- 3. COMPONENT CHÍNH ---
+export default function OverviewPage() {
+  // State lưu dữ liệu
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    activeCourses: 0,
+    totalStudents: 0,
+    activeLearners: 0,
+  });
+
+  const [distributions, setDistributions] = useState({
+    course: [], 
+    user: [],   
+  });
+
+  const [lists, setLists] = useState({
+    topCourses: [],     
+    activeLearners: [], 
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  // Gọi API khi vào trang
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        
+        // Gọi song song 3 API
+        const [resStats, resDist, resList] = await Promise.all([
+          fetch("/api/overview-stats"),
+          fetch("/api/distribution-stats"),
+          fetch("/api/list-stats"),
+        ]);
+
+        const dataStats = await resStats.json();
+        const dataDist = await resDist.json();
+        const dataList = await resList.json();
+
+        // 1. Set Stats
+        setStats(dataStats);
+        
+        // 2. Set Pie Charts (Map thêm màu vào)
+        setDistributions({
+          course: (dataDist.courseDistribution || []).map((item: any) => ({
+            name: item.name || "Unknown",
+            value: item.value,
+            color: assignColor(item.name),
+          })),
+          user: (dataDist.userDistribution || []).map((item: any) => ({
+            name: item.name || "Unknown",
+            value: item.value,
+            color: assignColor(item.name),
+          })),
+        });
+
+        // 3. Set Lists
+        setLists(dataList);
+
+      } catch (error) {
+        console.error("Lỗi tải dữ liệu:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  // Map dữ liệu Stats để render
+  const statsDisplay = [
+    {
+      label: "Total Courses",
+      val: stats.totalCourses?.toLocaleString() || "0",
+      sub: "Organized courses",
+      icon: BookOpen,
+    },
+    {
+      label: "Active Courses",
+      val: stats.activeCourses?.toLocaleString() || "0",
+      sub: "Happening now",
+      icon: Activity,
+    },
+    {
+      label: "Total Students",
+      val: stats.totalStudents?.toLocaleString() || "0",
+      sub: "Registered users",
+      icon: Users,
+    },
+    {
+      label: "Active Learners",
+      val: stats.activeLearners?.toLocaleString() || "0",
+      sub: "Currently learning",
+      icon: UserCheck,
+    },
+  ];
+
+  if (loading) {
     return (
-      <div className="bg-zinc-800 border border-zinc-700 p-2 rounded shadow-md text-xs ">
-        <p className="font-semibold mb-1">{label}</p>
-        <p style={{ color: payload[0].color }}>
-          {payload[0].name}: {payload[0].value}
-        </p>
+      <div className="h-[80vh] flex flex-col items-center justify-center text-zinc-400 gap-2">
+        <Activity className="animate-spin w-8 h-8 text-blue-500" />
+        <p>Loading dashboard data...</p>
       </div>
     );
   }
-  return null;
-};
 
-const stats = [
-  {
-    label: "Dataset",
-    val: "MOOCCubeX",
-    sub: "Online learning data",
-    icon: Database,
-  },
-  {
-    label: "Total Students",
-    val: "2,324,544",
-    sub: "active in system",
-    icon: Users,
-  },
-  {
-    label: "Avg Score",
-    val: "0.66",
-    sub: "+2.1% from last month",
-    icon: GraduationCap,
-  },
-];
-
-export default function OverviewPage() {
   return (
-    <div className=" space-y-6 ">
-      <h1 className="text-3xl font-bold  mb-2 tracking-tight drop-shadow-md">
+    <div className="space-y-6 pb-10">
+      <h1 className="text-3xl font-bold mb-2 tracking-tight drop-shadow-md text-white">
         Overview
       </h1>
 
-      {/* Row 1: 4 Stats Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full">
-        {stats.map((item, i) => (
+      {/* --- PHẦN 1: 4 THẺ STATS --- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+        {statsDisplay.map((item, i) => (
           <StatCard
             key={i}
             value={item.val}
@@ -124,148 +193,127 @@ export default function OverviewPage() {
         ))}
       </div>
 
-      <div className="  grid grid-cols-1  md:grid-cols-[2fr_1fr]  gap-6 w-full">
-        <div className="grid grid-cols-1 lg:grid-row-[2fr_fr] auto-rows-min  gap-y-6">
-          {/* Line Chart Area - Chiếm 2 phần */}
-          <CustomLineChart
-            data={lineData}
-            labels={["Enrollment"]}
-            title="Monthly Student Enrollment in Courses Nearly"
-            className="h-[450px]"
+      {/* --- PHẦN 2: CHIA 2 CỘT NỘI DUNG --- */}
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        
+        {/* === CỘT TRÁI: COURSES === */}
+        <div className="space-y-6">
+          <CustomPieChart 
+            data={distributions.course} 
+            title="Course Quality Distribution" 
           />
 
-          <div className="grid grid-cols-1  lg:grid-cols-[2fr_4fr] auto-rows-min gap-6">
-            {/* Pass Rate Gauge */}
-            <Card className="h-full  bg-[linear-gradient(to_bottom,#2A2C2B_10%,#323734_100%)] border-0 shadow-xl shadow-black/30">
-              <CardHeader>
-                <CardTitle className="text-xl text-center">
-                  Pass Rate Summary
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="flex flex-col items-center justify-center space-y-4">
-                <div className="relative w-46 h-36 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle
-                      cx="50%"
-                      cy="50%"
-                      r="60"
-                      stroke="currentColor"
-                      strokeWidth="12"
-                      fill="transparent"
-                      className="text-zinc-800"
-                    />
-                    <circle
-                      cx="50%"
-                      cy="50%"
-                      r="60"
-                      stroke="currentColor"
-                      strokeWidth="14"
-                      fill="transparent"
-                      strokeDasharray={377}
-                      strokeDashoffset={377 - (377 * 0.1) / 100}
-                      className="text-green-500 transition-all duration-1000 ease-out"
-                    />
-                  </svg>
-                  <div className="absolute text-center">
-                    <span className="text-3xl font-bold ">0.1%</span>
-                  </div>
-                </div>
-                <p className="text-sm text-zinc-400">
-                  Total pass rate this month
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* monthly top 7 pass rate */}
-            <RateBarChart
-              data={barChartData}
-              title="Top 7 Monthly Pass Rate of Users"
-            />
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+              <h3 className="font-semibold flex items-center gap-2 text-zinc-200">
+                <BookOpen className="w-4 h-4 text-blue-400" />
+                Latest Course Activity
+              </h3>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-zinc-800 hover:bg-transparent">
+                  <TableHead className="text-zinc-400">Course Name</TableHead>
+                  <TableHead className="text-zinc-400 text-center">Views</TableHead>
+                  <TableHead className="text-zinc-400 text-center">Ex. Count</TableHead>
+                  <TableHead className="text-zinc-400 text-right">Rating</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* Fallback nếu mảng rỗng */}
+                {lists.topCourses?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="text-center text-zinc-500 py-8">
+                      No course data available
+                    </TableCell>
+                  </TableRow>
+                )}
+                
+                {lists.topCourses?.map((c: any, i: number) => (
+                  <TableRow key={i} className="border-zinc-800 hover:bg-zinc-800/50 transition-colors">
+                    <TableCell className="font-medium text-zinc-200 truncate max-w-[200px]" title={c.name}>
+                        {c.name}
+                    </TableCell>
+                    <TableCell className="text-center text-zinc-400">
+                      <div className="flex justify-center items-center gap-1">
+                         <PlayCircle className="w-3 h-3 text-zinc-500" /> 
+                         {Number(c.views).toLocaleString()}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center text-zinc-400">
+                      {Number(c.exercises).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <StatusBadge label={c.label} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 grid-rows-[2fr_3fr] gap-6">
-          {/* label distribution */}
-          <CustomPieChart
-            data={labelData}
-            title="Learning outcome distribution"
+        {/* === CỘT PHẢI: USERS === */}
+        <div className="space-y-6">
+          <CustomPieChart 
+            data={distributions.user} 
+            title="Student Performance Distribution" 
           />
-          {/* Leaderboard Table */}
-          <Shape />
-          <div className="w-full  mx-auto">
-            <div className="flex items-center w-full pl-0 justify-between relative z-10">
-              <>
-                <Tab
-                  variant="start"
-                  active={true}
-                  onClick={() => {}}
-                  label="Top  10 courses"
-                />
-              </>
-              <Button
-                asChild
-                variant="link"
-                size="sm"
-                className="text-sm text-zinc-400 p-0"
-              >
-                <Link href="/dashboard/courses">
-                  Show more
-                  <ChevronRight className="ml-1 text-[var(--text-secondary)]" />
-                </Link>
-              </Button>
-            </div>
 
-            <div
-              className={`
-            bg-[linear-gradient(to_bottom,#2A2C2B_70%,#303231_100%)] border-0 text-white shadow-xxl shadow-black/30
-            rounded-b-xl rounded-tr-xl rounded-tl-none 
-            pt-4
-            relative z-0
-
-          `}
-            >
-              <div className="animate-in fade-in zoom-in-95 duration-300 h-full ">
-                <Table>
-                  <TableHeader>
-                    <TableRow className=" border-zinc-800 hover:bg-transparent">
-                      <TableHead className="pl-6  h-8 text-sm font-semibold py-6 ">
-                        Course Id
-                      </TableHead>
-                      <TableHead className=" h-8  text-center text-sm  font-semibold">
-                        Total Registration
-                      </TableHead>
-                      <TableHead className="  h-8 text-sm text-right font-semibold pr-4 ">
-                        Pass Rate
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {courseData.map((row, index) => (
-                      <TableRow
-                        key={row.courseId}
-                        className="border-zinc-800 w-full hover:bg-zinc-800/50 transition-colors  "
-                        style={{
-                          backgroundColor:
-                            index % 2 !== 0 ? "transparent" : "#ffffff3b",
-                        }}
-                      >
-                        <TableCell className=" py-2 text-left text-zinc-300 pl-6">
-                          {row.courseId}
-                        </TableCell>
-                        <TableCell className=" text-center text-zinc-400">
-                          {row.totalRegistration}
-                        </TableCell>
-                        <TableCell className=" text-right font-bold text-green-400 pr-6">
-                          {row.passRate}%
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+          <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden shadow-sm">
+             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+              <h3 className="font-semibold flex items-center gap-2 text-zinc-200">
+                <Users className="w-4 h-4 text-green-400" />
+                Latest Student Activity
+              </h3>
             </div>
+            <Table>
+              <TableHeader>
+                <TableRow className="border-zinc-800 hover:bg-transparent">
+                  <TableHead className="text-zinc-400">Student</TableHead>
+                  <TableHead className="text-zinc-400">Course</TableHead>
+                  <TableHead className="text-zinc-400 text-center">Hours</TableHead>
+                  <TableHead className="text-zinc-400 text-center">Ex. Done</TableHead>
+                  <TableHead className="text-zinc-400 text-right">Label</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {/* Fallback nếu mảng rỗng */}
+                {lists.activeLearners?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-zinc-500 py-8">
+                      No student activity found
+                    </TableCell>
+                  </TableRow>
+                )}
+
+                {lists.activeLearners?.map((u: any, i: number) => (
+                  <TableRow key={i} className="border-zinc-800 hover:bg-zinc-800/50 transition-colors">
+                    <TableCell className="font-medium text-zinc-200 truncate max-w-[120px]" title={u.name}>
+                        {u.name}
+                    </TableCell>
+                    <TableCell className="text-xs text-zinc-500 truncate max-w-[120px]" title={u.course}>
+                        {u.course}
+                    </TableCell>
+                    <TableCell className="text-center text-zinc-400">
+                        <div className="flex justify-center items-center gap-1">
+                            <Clock className="w-3 h-3 text-zinc-500" /> 
+                            {Number(u.hours).toFixed(1)}
+                        </div>
+                    </TableCell>
+                    <TableCell className="text-center text-zinc-400">
+                      {u.done}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <StatusBadge label={u.label} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </div>
+
       </div>
     </div>
   );
